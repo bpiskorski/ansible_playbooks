@@ -1,0 +1,12 @@
+---
+- name: update and uprgade packages
+  ghost: ubuntu
+  become: true
+
+  tasks:
+    - name: update packages
+      apt:
+        update_cache: yes
+    - name: upgrade packages
+      apt:
+        upgrade: dist

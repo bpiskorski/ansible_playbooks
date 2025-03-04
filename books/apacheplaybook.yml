@@ -1,0 +1,22 @@
+---
+- name: apacheplaybook
+  hosts: ubuntu
+  become: true
+
+  tasks:
+    - name: install apache2
+      apt:
+        name=apache2 
+        state=present
+
+    - name: create index.html
+      copy: 
+        content="<html><body><h1>inserted with playbook</h1></body></html>"
+        dest=/var/www/html/index.html
+    - name: listen on
+      lineinfile:
+        path=/etc/apache2/ports.conf
+        line="Listen 0.0.0.0:80"
+        state=present
+    - name: restart apache2
+      service: name=apache2 state=restarted

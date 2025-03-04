@@ -1,0 +1,25 @@
+---
+- name: configure ubuntu server
+  hosts: ubuntu
+  become: yes
+
+  tasks:
+    - name: install ufw
+      apt:
+        name: ufw
+        state: present
+        update_cache: yes
+    - name: enable http and ssh
+      ufw:
+        rule: allow
+        port: "{{ item }}"
+        proto: tcp
+      with_items:
+        - 80
+        - 22
+        - 443
+    - name: enable ufw
+      ufw:
+        state: enabled
+
+      

@@ -1,0 +1,19 @@
+version: "3.8"
+
+services:
+  ubuntu-container:
+    build: .
+    container_name: ubuntu-container
+    privileged: true
+    volumes:
+      - ./books:/home/ansible/books
+      - /var/run/docker.sock:/var/run/docker.sock
+    working_dir: /home/ansible
+    stdin_open: true  
+    tty: true   
+    ports:
+      - "8080:80"
+      - "9090:9090"
+      - "3000:3000"     
+    
+    entrypoint: ["/bin/sh"]

@@ -1,25 +1,32 @@
 ---
 - name: install monitoring tools
   hosts: ubuntu
-  become: true
+  become: yes
 
   tasks:
-    - name: install prometheus and grafana
+    - name: install git
       apt:
-        name: 
-          - prometheus
-          - grafana
+        name: git
         state: present
-    - name: start prometheus and grafana
-      systemd:
-        name: 
-          - prometheus
-          - grafana
-        state: started
-        enabled: true
-    - name: configure ports
-      ufw:
-        rule: allow
-        port:
-          - 9090
-          - 3000
+        update_cache: yes
+    - name: clone ansible-prometheus repo
+      git:
+        repo: https://github.com/cloudalchemy/ansible-prometheus.git
+        dest: /tmp/ansible/prometheus
+    - name: create directory structure
+      file:
+        path: /tmp/ansiible-prometheus/roles/cloudalchemy.prometheus
+        state: directory
+    - name: copy files
+      command:
+        cmd: mv defaults/ handlers/ meta/ molecule/ tasks/ templates/ vars/ /tmp/ansible-prometheus/roles/cloudalchemy.prometheus/
+        chdir: /tmp/ansible-prometheus
+
+    - name: copy main.yml
+      copy:
+        dest: /tmp/ansible-prometheus/roles/cloudalchemy.prometheus/main.yml
+        src: main.yml
+
+    - name: run playbook
+      command:
+        cmd: ansible-playbook /tmp/ansible/roles/cloudalchemy.prometheus/main.yml

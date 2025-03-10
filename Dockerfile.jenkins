@@ -1,0 +1,14 @@
+FROM jenkins/jenkins
+USER root
+
+RUN apt-get update && apt-get install -y curl sudo
+RUN curl -sSL https://get.docker.com/ | sh
+RUN usermod -aG docker jenkins
+RUN echo "jenkins ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+RUN jenkins-plugin-cli --plugins \
+    git \
+    docker-workflow 
+
+
+#RUN mkdir -p /etc/systemd/system/docker.service.d
+USER jenkins

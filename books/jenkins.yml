@@ -1,0 +1,4 @@
+- name: automate jobs with ansible
+  pip:
+    name: jenkins-job-builder
+    state: present
